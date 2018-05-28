@@ -5,10 +5,11 @@ clear all
 addpath('ZhuRamananDetector','optimisations','utils');
 
 % YOU MUST set this to the base directory of the Basel Face Model
-BFMbasedir = '../../data/BFM09/PublicMM1/';
+BFMbasedir = '../data/BFM09/PublicMM1/';
 
 % Load morphable model
-load(strcat(BFMbasedir,'01_MorphableModel.mat'));
+modelname = '01_MorphableModel';
+load(strcat(BFMbasedir, modelname, '.mat'));
 % Important to use double precision for use in optimisers later
 shapeEV = double(shapeEV);
 shapePC = double(shapePC);
@@ -42,9 +43,13 @@ options.w1 = 0.45;
 options.w2 = 0.15;
 
 %% Setup basic parameters
-
+savedir = 'saveMats/';
+if ~exist(savedir, 'dir')
+    mkdir(savedir);
+end
 testdir='testImages/';
-im = imread(strcat(testdir,'image_0018.png'));
+imagename = 'image_0018';
+im = imread(strcat(testdir, imagename,'.png'));
 edgeim = edge(rgb2gray(im),'canny',0.15);
 
 ZRtimestart = tic;
@@ -115,3 +120,7 @@ FV.vertices=reshape(shapePC(:,1:ndims)*b+shapeMU,3,size(shapePC,1)/3)';
 figure; subplot(1,3,1); patch(FV, 'FaceColor', [1 1 1], 'EdgeColor', 'none', 'FaceLighting', 'phong'); light; axis equal; axis off;
 subplot(1,3,2); imshow(renderFace(FV,im,R,t,s,false));
 subplot(1,3,3); imshow(renderFace(FV,im,R,t,s,true));
+
+% save mat 
+savepath = strcat(savedir, '/', imagename, '-', modelname, '.mat');
+save(savepath, 'FV', 'im', 'R', 's', 't');
