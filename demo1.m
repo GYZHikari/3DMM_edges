@@ -80,7 +80,8 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global vid1
-vid1 = videoinput('winvideo',1);
+vid1 = videoinput('macvideo',1);
+set(vid1, 'ReturnedColorSpace', 'RGB');
 usbVidRes1=get(vid1,'videoResolution');
 nBands1=get(vid1,'NumberOfBands');
 axes(handles.axes1); 

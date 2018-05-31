@@ -1,3 +1,5 @@
+% jjcao @ 2018
+
 clc;clearvars;close all;
 addpath utils;
 addpath ./jjcao_code/toolbox/jjcao_interact;
@@ -12,11 +14,13 @@ matdir = './saveMats/';
 imagename = 'image_0018';
 modelname = '01_MorphableModel';
 badTextThre = 0.2;
-negativeThre = 0;%1000
+negativeThre = 25000;%1000
 
 matpath = strcat(matdir, '/', imagename, '-', modelname, '.mat');
 load(matpath);
 %%
+load image_0018.mat;
+%load yangmi.mat;
 edges = compute_edges(FV.faces);
 
 %% find symmetric vertices of vertices with x < 0
@@ -95,7 +99,7 @@ if(~isa(im,'double'))
 end
 
 FVr.facevertexcdata = faceTexture(FV,R,t,s,im);
-FVr.facevertexcdata(idx,:) = FVr.facevertexcdata(idx_negative_sym(idx),:);
+%FVr.facevertexcdata(idx,:) = FVr.facevertexcdata(idx_negative_sym(idx),:);
 % FVr.facevertexcdata(idx,:) = 0.0;
 % FVr.facevertexcdata(idx_negative_sym(idx),:) = 0.0;
 % FVr.facevertexcdata(idx_negative,:) = 0.0;
@@ -105,7 +109,7 @@ p = patch(FVr, 'FaceVertexCData', FVr.facevertexcdata, 'EdgeColor', 'none'); axi
 view3d rot; hold on;
 
 %%
-FVr.facevertexcdata(idx_negative,:) = FVr.facevertexcdata(idx_negative_sym(idx_negative),:);
+FVr.facevertexcdata(idx_negative,:) = FVr.facevertexcdata(idx_negative_sym(idx_negative),:)*1.2;
 figure;
 p = patch(FVr, 'FaceVertexCData', FVr.facevertexcdata, 'EdgeColor', 'none'); axis equal; axis off; p.FaceColor = 'interp';
 view3d rot; hold on;
@@ -121,5 +125,5 @@ subplot(1,2,1);
 p = patch(FVr, 'FaceVertexCData', FVr.facevertexcdata, 'EdgeColor', 'none'); light; axis equal; axis off; p.FaceColor = 'interp';
 %patch(FV, 'FaceColor', [1 1 1], 'EdgeColor', 'none', 'FaceLighting', 'phong');light; axis equal; axis off;
 colorbar
-subplot(1,2,2); imshow(renderFace(FVr,im,R,t,s,false));
+subplot(1,2,2); imshow(renderFace(FVr,im,R,t,s,true));
 % subplot(1,3,3); imshow(renderFace(FV,im,R,t,s,true));
